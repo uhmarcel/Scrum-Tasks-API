@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.uhmarcel</groupId>
-	<artifactId>scrum-task-manager</artifactId>
+	<artifactId>story-tasks-api</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>scrum-task-manager</name>
-	<description>Backend service for the scrum tasks manager application</description>
+	<description>Backend service for the story tasks manager application</description>
 
 	<properties>
 		<java.version>1.8</java.version>

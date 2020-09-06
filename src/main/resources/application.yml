@@ -1,0 +1,22 @@
+# Application variables
+vars:
+  application:
+    environment: ${APP_ENVIRONMENT:local}
+    name: ${APP_NAME:story-tasks-api}
+    version: ${APP_VERSION:1.0.0}
+  mongodb:
+    url: ${DATABASE_URL:mongodb://localhost:27017/story-tasks}
+  server:
+    port: ${PORT:8080}
+
+# Application properties
+server:
+  port: ${vars.server.port}
+
+spring:
+  application:
+    name: ${vars.application.name}
+  data:
+    mongodb:
+      uri: ${vars.mongodb.url}
+      auto-index-creation: true
