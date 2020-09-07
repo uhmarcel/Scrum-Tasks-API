@@ -1,4 +1,5 @@
 package com.uhmarcel.storytasks.models;
+
 import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Size;
 import com.uhmarcel.storytasks.models.common.Status;

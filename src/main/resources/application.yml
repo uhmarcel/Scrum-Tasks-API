@@ -8,6 +8,8 @@ vars:
     url: ${DATABASE_URL:mongodb://localhost:27017/story-tasks}
   server:
     port: ${PORT:8080}
+  security:
+    cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
 
 # Application properties
 server:
