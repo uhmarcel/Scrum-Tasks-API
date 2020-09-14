@@ -12,25 +12,26 @@ import java.util.List;
 public class StoryItem {
 
     @Id private Long id;
-    private String name;
-    private String description;
+    private Long parent;
     private List<Long> children;
+    private String title;
+    private String description;
     private List<Task> tasks;
     private Priority priority;
     private Size size;
     private Status status;
 
-    public StoryItem(Long id, String name, String description, List<Long> children, List<Task> tasks, Priority priority, Size size, Status status) {
+    public StoryItem(Long id, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status) {
         this.id = id;
-        this.name = name;
-        this.description = description;
+        this.parent = parent;
         this.children = children;
+        this.title = title;
+        this.description = description;
         this.tasks = tasks;
         this.priority = priority;
         this.size = size;
         this.status = status;
     }
-
 
     public Long getId() {
         return id;
@@ -40,20 +41,12 @@ public class StoryItem {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Long getParent() {
+        return parent;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public void setParent(Long parent) {
+        this.parent = parent;
     }
 
     public List<Long> getChildren() {
@@ -62,6 +55,22 @@ public class StoryItem {
 
     public void setChildren(List<Long> children) {
         this.children = children;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public List<Task> getTasks() {
@@ -94,5 +103,20 @@ public class StoryItem {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public String toString() {
+        return String.format(
+            "{ id: %s, parent: %s, children: %s, title: %s, description: %s, tasks: %s, priority: %s, size: %s, status: %s }",
+            this.id,
+            this.parent,
+            this.children,
+            this.title,
+            this.description,
+            this.tasks,
+            this.priority,
+            this.size,
+            this.status
+        );
     }
 }
