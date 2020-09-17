@@ -101,7 +101,7 @@ public class StoryItemController {
         BeanUtils.copyProperties(story, original, "id");
         updatedStories.add(original);
 
-        return updatedStories;
+        return storyItemRepository.saveAll(updatedStories);
     }
 
     @PostMapping("/generate")
