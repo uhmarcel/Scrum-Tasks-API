@@ -6,6 +6,8 @@ import com.uhmarcel.storytasks.models.common.Status;
 import com.uhmarcel.storytasks.models.common.Task;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Document
@@ -23,11 +25,11 @@ public class StoryItem {
 
     public StoryItem(Long id, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status) {
         this.id = id;
-        this.parent = parent;
-        this.children = children;
+        this.parent = parent != null ? parent : -1;
+        this.children = children != null ? children : new ArrayList<>();
         this.title = title;
         this.description = description;
-        this.tasks = tasks;
+        this.tasks = tasks != null ? tasks : new ArrayList<>();
         this.priority = priority;
         this.size = size;
         this.status = status;

@@ -104,20 +104,6 @@ public class StoryItemController {
         return updatedStories;
     }
 
-    @PutMapping("/{storyID}/task/{taskID}")
-    public StoryItem updateTask(@PathVariable Long storyID, @PathVariable UUID taskID, @RequestBody Task task) {
-        log.info(String.format("UpdateStoryTask: { storyID: %s, taskID: %s, task: %s }", storyID, taskID, task));
-        StoryItem story = storyItemRepository.findById(storyID).get();
-
-        for (Task currentTask : story.getTasks()) {
-            if (currentTask.getId().equals(taskID)) {
-                BeanUtils.copyProperties(task, currentTask, "id");
-                break;
-            }
-        }
-        return storyItemRepository.save(story);
-    }
-
     @PostMapping("/generate")
     public List<StoryItem> generate() {
         List<StoryItem> tasks = new ArrayList<>();
