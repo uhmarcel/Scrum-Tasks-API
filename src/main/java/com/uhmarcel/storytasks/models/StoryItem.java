@@ -1,9 +1,6 @@
 package com.uhmarcel.storytasks.models;
 
-import com.uhmarcel.storytasks.models.common.Priority;
-import com.uhmarcel.storytasks.models.common.Size;
-import com.uhmarcel.storytasks.models.common.Status;
-import com.uhmarcel.storytasks.models.common.Task;
+import com.uhmarcel.storytasks.models.common.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,7 +10,7 @@ import java.util.List;
 @Document
 public class StoryItem {
 
-    @Id private Long id;
+    @Id private final Identifier identifier;
     private Long parent;
     private List<Long> children;
     private String title;
@@ -23,8 +20,8 @@ public class StoryItem {
     private Size size;
     private Status status;
 
-    public StoryItem(Long id, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status) {
-        this.id = id;
+    public StoryItem(Identifier identifier, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status) {
+        this.identifier = identifier != null ? identifier : Identifier.from((long) Math.floor(Math.random() * 10000));
         this.parent = parent != null ? parent : -1;
         this.children = children != null ? children : new ArrayList<>();
         this.title = title;
@@ -35,12 +32,8 @@ public class StoryItem {
         this.status = status;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public Identifier getIdentifier() {
+        return identifier;
     }
 
     public Long getParent() {
@@ -109,8 +102,8 @@ public class StoryItem {
 
     public String toString() {
         return String.format(
-            "{ id: %s, parent: %s, children: %s, title: %s, description: %s, tasks: %s, priority: %s, size: %s, status: %s }",
-            this.id,
+            "{ identifier: %s, parent: %s, children: %s, title: %s, description: %s, tasks: %s, priority: %s, size: %s, status: %s }",
+            this.identifier,
             this.parent,
             this.children,
             this.title,

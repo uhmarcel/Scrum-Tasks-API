@@ -6,9 +6,10 @@ import com.uhmarcel.storytasks.models.common.Status;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface StoryItemRepositoryCustom {
 
-    List<StoryItem> findAllWithFilters(Long parent, Status status, Priority priority, Pageable page, boolean includeParent);
+    List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, Pageable page, boolean includeParent);
 
 }

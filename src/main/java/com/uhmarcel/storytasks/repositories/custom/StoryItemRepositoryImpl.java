@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class StoryItemRepositoryImpl implements StoryItemRepositoryCustom {
 
@@ -22,17 +23,18 @@ public class StoryItemRepositoryImpl implements StoryItemRepositoryCustom {
     }
 
     @Override
-    public List<StoryItem> findAllWithFilters(Long parent, Status status, Priority priority, Pageable page, boolean includeParent) {
-        Criteria criteria = generateSearchCriteria(parent, status, priority, includeParent);
+    public List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, Pageable page, boolean includeParent) {
+        Criteria criteria = generateSearchCriteria(userId, parent, status, priority, includeParent);
         Query query = new Query().with(page).addCriteria(criteria);
         return mongoTemplate.find(query, StoryItem.class);
     }
 
-    private Criteria generateSearchCriteria(Long parent, Status status, Priority priority, boolean includeParent) {
+    private Criteria generateSearchCriteria(UUID userId, Long parent, Status status, Priority priority, boolean includeParent) {
         // Organized as OR of ANDS
         List<Criteria> mainCriteria = new ArrayList<>();
 
         List<Criteria> firstCriteria = new ArrayList<>();
+        if (userId != null) firstCriteria.add(Criteria.where("identifier.userId").is(userId));
         if (parent != null) firstCriteria.add(Criteria.where("parent").is(parent));
         if (status != null) firstCriteria.add(Criteria.where("status").is(status.toString()));
         if (priority != null) firstCriteria.add(Criteria.where("priority").is(priority.toString()));
