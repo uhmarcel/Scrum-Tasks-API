@@ -1,3 +1,4 @@
+
 # Application Variables
 vars:
   application:
@@ -10,12 +11,21 @@ vars:
     port: ${PORT:8080}
   security:
     cors-allowed-origins: ${CORS_ALLOWED_ORIGINS:*}
-    google-oauth2-client-id: ${GOOGLE_OAUTH2_CLIENT_ID}
-    google-oauth2-client-secret: ${GOOGLE_OAUTH2_CLIENT_SECRET}
+    okta-oauth2-issuer: ${OKTA_OAUTH2_VAL_ISSUER}
+    okta-oauth2-client-id: ${OKTA_OAUTH2_VAL_CLIENT_ID}
+    okta-oauth2-client-secret: ${OKTA_OAUTH2_VAL_CLIENT_SECRET}
+
 
 # Application Properties
 server:
   port: ${vars.server.port}
+
+
+okta:
+  oauth2:
+    issuer: ${vars.security.okta-oauth2-issuer}
+    client-id: ${vars.security.okta-oauth2-client-id}
+    client-secret: ${vars.security.okta-oauth2-client-secret}
 
 spring:
   application:
@@ -24,10 +34,11 @@ spring:
     mongodb:
       uri: ${vars.mongodb.url}
       auto-index-creation: true
-  security:
-    oauth2:
-      client:
-        registration:
-          google:
-            client-id: ${vars.security.google-oauth2-client-id}
-            client-secret: ${vars.security.google-oauth2-client-secret}
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+    org.springframework.web.client.RestTemplate: DEBUG

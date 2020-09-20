@@ -2,21 +2,22 @@ package com.uhmarcel.storytasks.controllers;
 import com.uhmarcel.storytasks.models.StoryItem;
 import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Status;
-import com.uhmarcel.storytasks.models.common.Task;
 import com.uhmarcel.storytasks.repositories.StoryItemRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
-import static com.uhmarcel.storytasks.configuration.ApplicationConstants.*;
+import static com.uhmarcel.storytasks.configuration.Constants.*;
 
 @RestController
 @RequestMapping(APP_ROUTE_PREFIX + STORY_ROUTE)
@@ -77,6 +78,7 @@ public class StoryItemController {
     @PutMapping("/{id}")
     public List<StoryItem> update(@PathVariable Long id, @RequestBody StoryItem story) {
         log.info(String.format("UpdateStoryItem: { id: %s, story: %s }", id, story));
+
         StoryItem original = storyItemRepository.findById(id).get();
         List<StoryItem> updatedStories = new ArrayList<>();
 
