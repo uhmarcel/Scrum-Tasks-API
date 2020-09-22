@@ -1,9 +1,12 @@
 package com.uhmarcel.storytasks.controllers;
 import com.uhmarcel.storytasks.models.StoryItem;
+import com.uhmarcel.storytasks.models.common.Identifier;
 import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Status;
 import com.uhmarcel.storytasks.repositories.StoryItemRepository;
+import com.uhmarcel.storytasks.services.AutoIncrementService;
 import com.uhmarcel.storytasks.services.StoryService;
+import com.uhmarcel.storytasks.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -23,11 +26,14 @@ import static com.uhmarcel.storytasks.configuration.ControllerConstants.*;
 @RequestMapping(APP_ROUTE_PREFIX)
 public class StoryItemController {
 
-    private StoryService storyService;
     private Logger log;
+    private StoryService storyService;
+    private AutoIncrementService autoIncrementService;
 
-    public StoryItemController(StoryService storyService) {
+
+    public StoryItemController(StoryService storyService, AutoIncrementService autoIncrementService) {
         this.storyService = storyService;
+        this.autoIncrementService = autoIncrementService;
         this.log = LoggerFactory.getLogger(StoryItemController.class);
     }
 
@@ -47,6 +53,12 @@ public class StoryItemController {
     @PostMapping("/stories")
     public List<StoryItem> create(@RequestBody final StoryItem story) {
         log.info(String.format("CreateStoryItem: %s", story));
+
+        // FIXME: Will increase increment counter even if creating the story fails
+        UUID userID = UserService.getUserIdentifier();
+        Long storyID = autoIncrementService.getNext(StoryItem.SEQUENCE_KEY, userID.toString());
+        story.setIdentifier(new Identifier(userID, storyID));
+
         return storyService.create(story);
     }
 

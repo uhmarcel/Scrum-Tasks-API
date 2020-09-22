@@ -2,6 +2,7 @@ package com.uhmarcel.storytasks.models;
 
 import com.uhmarcel.storytasks.models.common.*;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -9,8 +10,10 @@ import java.util.List;
 
 @Document
 public class StoryItem {
+    @Transient
+    public static final String SEQUENCE_KEY = "STORY_ITEM";
 
-    @Id private final Identifier identifier;
+    @Id private Identifier identifier;
     private Long parent;
     private List<Long> children;
     private String title;
@@ -34,6 +37,10 @@ public class StoryItem {
 
     public Identifier getIdentifier() {
         return identifier;
+    }
+
+    public void setIdentifier(Identifier identifier) {
+        this.identifier = identifier;
     }
 
     public Long getParent() {
