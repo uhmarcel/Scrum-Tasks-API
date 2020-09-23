@@ -22,8 +22,9 @@ public class StoryItem {
     private Priority priority;
     private Size size;
     private Status status;
+    private String color;
 
-    public StoryItem(Identifier identifier, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status) {
+    public StoryItem(Identifier identifier, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status, String color) {
         this.identifier = identifier != null ? identifier : Identifier.from((long) Math.floor(Math.random() * 10000));
         this.parent = parent != null ? parent : -1;
         this.children = children != null ? children : new ArrayList<>();
@@ -33,6 +34,7 @@ public class StoryItem {
         this.priority = priority;
         this.size = size;
         this.status = status;
+        this.color = color;
     }
 
     public Identifier getIdentifier() {
@@ -107,9 +109,17 @@ public class StoryItem {
         this.status = status;
     }
 
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public String toString() {
         return String.format(
-            "{ identifier: %s, parent: %s, children: %s, title: %s, description: %s, tasks: %s, priority: %s, size: %s, status: %s }",
+            "{ identifier: %s, parent: %s, children: %s, title: %s, description: %s, tasks: %s, priority: %s, size: %s, status: %s, color: %s }",
             this.identifier,
             this.parent,
             this.children,
@@ -118,7 +128,8 @@ public class StoryItem {
             this.tasks,
             this.priority,
             this.size,
-            this.status
+            this.status,
+            this.color
         );
     }
 }

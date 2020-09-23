@@ -54,7 +54,7 @@ public class StoryItemController {
     public List<StoryItem> create(@RequestBody final StoryItem story) {
         log.info(String.format("CreateStoryItem: %s", story));
 
-        // FIXME: Will increase increment counter even if creating the story fails
+        // FIXME: Will increase increment counter even if creating the story fails -> Change to trigger
         UUID userID = UserService.getUserIdentifier();
         Long storyID = autoIncrementService.getNext(StoryItem.SEQUENCE_KEY, userID.toString());
         story.setIdentifier(new Identifier(userID, storyID));
