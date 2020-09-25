@@ -31,9 +31,9 @@ public class StoryService {
         UUID userId = UserService.getUserIdentifier();
         if (ids != null) {
             List<Identifier> identifiers = ids
-                    .stream()
-                    .map(referenceId -> new Identifier(userId, referenceId))
-                    .collect(Collectors.toList());
+                .stream()
+                .map(referenceId -> new Identifier(userId, referenceId))
+                .collect(Collectors.toList());
             return (List<StoryItem>) storyItemRepository.findAllById(identifiers);
         }
         return storyItemRepository.findAllWithFilters(userId, parent, status, priority, page, includeParent);
@@ -48,59 +48,66 @@ public class StoryService {
         return storyItemRepository.findById(identifier).get();
     }
 
-    public void delete(Long referenceId) {
-        delete(Identifier.from(referenceId));
+    public List<StoryItem> delete(Long referenceId) {
+        return delete(Identifier.from(referenceId));
     }
 
-    public void delete(Identifier identifier) {
+    public List<StoryItem> delete(Identifier identifier) {
+        StoryItem original = storyItemRepository.findById(identifier).get();
+        List<StoryItem> updatedStories = syncParentChild(original, null);
         storyItemRepository.deleteById(identifier);
-    }
-
-    public List<StoryItem> create(StoryItem story) {
-        List<StoryItem> updatedStories = new ArrayList<>();
-
-        // TODO: Add validation
-        if (story.getParent() != null && story.getParent() != NO_PARENT_ID) {
-            StoryItem parent = storyItemRepository.findById(Identifier.from(story.getParent())).get(); // TODO: Add exceptions, and HTTP codes
-
-            List<Long> children = parent.getChildren();
-            if (!children.contains(story.getIdentifier())) {
-                children.add(story.getIdentifier().getReferenceId());
-                updatedStories.add(parent);
-            }
-        }
-        updatedStories.add(story);
-
         return storyItemRepository.saveAll(updatedStories);
     }
 
+    public List<StoryItem> create(StoryItem story) {
+        List<StoryItem> updatedStories = syncParentChild(null, story);
+        updatedStories.add(story);
+        return storyItemRepository.saveAll(updatedStories);
+    }
+
+    // TODO: Add exceptions
     public List<StoryItem> update(Long referenceId, StoryItem story) {
-        UUID userId = UserService.getUserIdentifier();
-        StoryItem original = storyItemRepository.findById(Identifier.from(userId, referenceId)).get();
-        List<StoryItem> updatedStories = new ArrayList<>();
-
-        if (original.getParent() != story.getParent()) {
-
-            if (original.getParent() != -1) {
-                StoryItem parent = storyItemRepository.findById(Identifier.from(userId, original.getParent())).get();
-                parent.getChildren().remove(original.getIdentifier());
-                updatedStories.add(parent);
-            }
-
-            if (story.getParent() != -1) {
-                StoryItem parent = storyItemRepository.findById(Identifier.from(userId, story.getParent())).get();
-
-                if (!parent.getChildren().contains(story.getIdentifier())) {
-                    parent.getChildren().remove(story.getIdentifier());
-                    updatedStories.add(parent);
-                }
-            }
-        }
+        StoryItem original = storyItemRepository.findById(Identifier.from(referenceId)).get();
+        List<StoryItem> updatedStories = syncParentChild(original, story);
 
         BeanUtils.copyProperties(story, original, "id");
         updatedStories.add(original);
 
         return storyItemRepository.saveAll(updatedStories);
+    }
+
+    // TODO: Consider children
+    private List<StoryItem> syncParentChild(StoryItem original, StoryItem next) {
+        UUID userId = UserService.getUserIdentifier();
+        List<StoryItem> updatedStories = new ArrayList<>();
+
+        // If this story's parent id has changed, remove it from its old parent and add it to new
+        if (original == null || next == null || original.getParent() != next.getParent()) {
+
+            // Get original parent and remove this story off its children list
+            if (original != null && original.getParent() != NO_PARENT_ID) {
+                storyItemRepository
+                    .findById(Identifier.from(userId, original.getParent()))
+                    .ifPresent(parent -> {
+                        parent.getChildren().remove(original.getIdentifier().getReferenceId());
+                        updatedStories.add(parent);
+                    });
+            }
+
+            // Get new parent and add this story on its children list
+            if (next != null && next.getParent() != NO_PARENT_ID) {
+                storyItemRepository
+                    .findById(Identifier.from(userId, next.getParent()))
+                    .ifPresent(parent -> {
+                        if (!parent.getChildren().contains(next.getIdentifier())) {
+                            parent.getChildren().add(next.getIdentifier().getReferenceId());
+                            updatedStories.add(parent);
+                        }
+                    });
+            }
+        }
+
+        return updatedStories;
     }
 
 }

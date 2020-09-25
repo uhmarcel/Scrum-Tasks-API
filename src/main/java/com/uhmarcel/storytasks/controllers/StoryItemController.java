@@ -69,8 +69,8 @@ public class StoryItemController {
 
 
     @DeleteMapping("/stories/{id}")
-    public void delete(@PathVariable("id") Long id) {
-        storyService.delete(id);
+    public List<StoryItem> delete(@PathVariable("id") Long id) {
+        return storyService.delete(id);
     }
 
     @PutMapping("/stories/{id}")
@@ -78,21 +78,5 @@ public class StoryItemController {
         log.info(String.format("UpdateStoryItem: { id: %s, story: %s }", id, story));
         return storyService.update(id, story);
     }
-
-//    @PostMapping("/generate")
-//    public List<StoryItem> generate() {
-//        List<StoryItem> tasks = new ArrayList<>();
-//        tasks.add(new StoryItem(1L, "Story 1", "Description 1", Arrays.asList(), Arrays.asList(new Task("Do work")), Priority.CRITICAL, Size.M, Status.TODO));
-//        tasks.add(new StoryItem(2L, "Story 2", "Description 2", Arrays.asList(1L), Arrays.asList(), Priority.CRITICAL, Size.M, Status.TODO));
-//        tasks.add(new StoryItem(3L, "Story 3", "Description 3", Arrays.asList(1L, 4L), Arrays.asList(), Priority.MEDIUM, Size.M, Status.TODO));
-//        tasks.add(new StoryItem(4L, "Story 4", "Description 4", Arrays.asList(), Arrays.asList(), Priority.CRITICAL, Size.L, Status.TODO));
-//        storyItemRepository.saveAll(tasks);
-//        return tasks;
-//    }
-
-//    @GetMapping("/test")
-//    public Authentication get() {
-//        return SecurityContextHolder.getContext().getAuthentication();
-//    }
 
 }
