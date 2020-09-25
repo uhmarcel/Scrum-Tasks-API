@@ -3,20 +3,15 @@ import com.uhmarcel.storytasks.models.StoryItem;
 import com.uhmarcel.storytasks.models.common.Identifier;
 import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Status;
-import com.uhmarcel.storytasks.repositories.StoryItemRepository;
 import com.uhmarcel.storytasks.services.AutoIncrementService;
 import com.uhmarcel.storytasks.services.StoryService;
 import com.uhmarcel.storytasks.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -53,12 +48,6 @@ public class StoryItemController {
     @PostMapping("/stories")
     public List<StoryItem> create(@RequestBody final StoryItem story) {
         log.info(String.format("CreateStoryItem: %s", story));
-
-        // FIXME: Will increase increment counter even if creating the story fails -> Change to trigger
-        UUID userID = UserService.getUserIdentifier();
-        Long storyID = autoIncrementService.getNext(StoryItem.SEQUENCE_KEY, userID.toString());
-        story.setIdentifier(new Identifier(userID, storyID));
-
         return storyService.create(story);
     }
 

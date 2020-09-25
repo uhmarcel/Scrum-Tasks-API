@@ -25,7 +25,7 @@ public class StoryItem {
     private String color;
 
     public StoryItem(Identifier identifier, Long parent, List<Long> children, String title, String description, List<Task> tasks, Priority priority, Size size, Status status, String color) {
-        this.identifier = identifier != null ? identifier : Identifier.from((long) Math.floor(Math.random() * 10000));
+        this.identifier = identifier;
         this.parent = parent != null ? parent : -1;
         this.children = children != null ? children : new ArrayList<>();
         this.title = title;

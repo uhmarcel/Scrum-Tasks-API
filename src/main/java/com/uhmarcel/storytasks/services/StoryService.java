@@ -6,9 +6,7 @@ import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Status;
 import com.uhmarcel.storytasks.repositories.StoryItemRepository;
 import org.springframework.beans.BeanUtils;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,9 +20,11 @@ import static com.uhmarcel.storytasks.configuration.ControllerConstants.NO_PAREN
 public class StoryService {
 
     private final StoryItemRepository storyItemRepository;
+    private final AutoIncrementService autoIncrementService;
 
-    public StoryService(StoryItemRepository storyItemRepository) {
+    public StoryService(StoryItemRepository storyItemRepository, AutoIncrementService autoIncrementService) {
         this.storyItemRepository = storyItemRepository;
+        this.autoIncrementService = autoIncrementService;
     };
 
     public List<StoryItem> getAll(Pageable page, List<Long> ids, Long parent, Status status, Priority priority, Boolean includeParent) {
@@ -60,6 +60,7 @@ public class StoryService {
     }
 
     public List<StoryItem> create(StoryItem story) {
+        story.setIdentifier(generateIdentifier());
         List<StoryItem> updatedStories = syncParentChild(null, story);
         updatedStories.add(story);
         return storyItemRepository.saveAll(updatedStories);
@@ -108,6 +109,13 @@ public class StoryService {
         }
 
         return updatedStories;
+    }
+
+    private final Identifier generateIdentifier() {
+        UUID userId = UserService.getUserIdentifier();
+        String sequenceKey = AutoIncrementService.composeKey(StoryItem.SEQUENCE_KEY, userId.toString());
+        Long referenceId = autoIncrementService.next(sequenceKey);
+        return new Identifier(userId, referenceId);
     }
 
 }
