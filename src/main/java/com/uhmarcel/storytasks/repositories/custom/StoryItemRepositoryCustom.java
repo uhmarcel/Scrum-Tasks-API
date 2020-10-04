@@ -10,6 +10,6 @@ import java.util.UUID;
 
 public interface StoryItemRepositoryCustom {
 
-    List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, Pageable page, boolean includeParent);
+    List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, String search, Pageable page, boolean includeParent);
 
 }

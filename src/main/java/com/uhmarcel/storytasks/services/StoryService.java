@@ -27,7 +27,7 @@ public class StoryService {
         this.autoIncrementService = autoIncrementService;
     };
 
-    public List<StoryItem> getAll(Pageable page, List<Long> ids, Long parent, Status status, Priority priority, Boolean includeParent) {
+    public List<StoryItem> getAll(Pageable page, List<Long> ids, Long parent, Status status, Priority priority, String search, Boolean includeParent) {
         UUID userId = UserService.getUserIdentifier();
         if (ids != null) {
             List<Identifier> identifiers = ids
@@ -36,7 +36,7 @@ public class StoryService {
                 .collect(Collectors.toList());
             return (List<StoryItem>) storyItemRepository.findAllById(identifiers);
         }
-        return storyItemRepository.findAllWithFilters(userId, parent, status, priority, page, includeParent);
+        return storyItemRepository.findAllWithFilters(userId, parent, status, priority, search, page, includeParent);
     }
 
 

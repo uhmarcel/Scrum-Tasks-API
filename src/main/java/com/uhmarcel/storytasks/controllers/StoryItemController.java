@@ -39,10 +39,12 @@ public class StoryItemController {
         @RequestParam(name = "parent", required = false) Long parent,
         @RequestParam(name = "status", required = false) Status status,
         @RequestParam(name = "priority", required = false) Priority priority,
+        @RequestParam(name = "search", required = false) String search,
         @RequestParam(name = "includeParent", defaultValue = "false") Boolean includeParent
     ) {
-        log.info(String.format("GetStoryItems: { parent: %s, status: %s, priority: %s, includeParent: %s }", parent, status, priority, includeParent));
-        return storyService.getAll(page, ids, parent, status, priority, includeParent);
+        log.info(String.format("GetStoryItems: { parent: %s, status: %s, priority: %s, search: %s, includeParent: %s }",
+                parent, status, priority, search, includeParent));
+        return storyService.getAll(page, ids, parent, status, priority, search, includeParent);
     }
 
     @PostMapping("/stories")

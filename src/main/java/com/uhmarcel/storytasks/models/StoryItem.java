@@ -3,6 +3,7 @@ package com.uhmarcel.storytasks.models;
 import com.uhmarcel.storytasks.models.common.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -16,8 +17,8 @@ public class StoryItem {
     @Id private Identifier identifier;
     private Long parent;
     private List<Long> children;
-    private String title;
-    private String description;
+    @TextIndexed(weight = 2) private String title;
+    @TextIndexed(weight = 1) private String description;
     private List<Task> tasks;
     private Priority priority;
     private Size size;

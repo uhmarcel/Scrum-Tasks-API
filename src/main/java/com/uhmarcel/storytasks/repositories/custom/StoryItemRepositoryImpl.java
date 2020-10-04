@@ -6,8 +6,7 @@ import com.uhmarcel.storytasks.models.common.Status;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +22,12 @@ public class StoryItemRepositoryImpl implements StoryItemRepositoryCustom {
     }
 
     @Override
-    public List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, Pageable page, boolean includeParent) {
+    public List<StoryItem> findAllWithFilters(UUID userId, Long parent, Status status, Priority priority, String search, Pageable page, boolean includeParent) {
+        Query query = search != null && !search.isEmpty()
+                ? TextQuery.queryText(TextCriteria.forDefaultLanguage().matchingAny(search)).sortByScore()
+                : new Query();
         Criteria criteria = generateSearchCriteria(userId, parent, status, priority, includeParent);
-        Query query = new Query().with(page).addCriteria(criteria);
+        query.with(page).addCriteria(criteria);
         return mongoTemplate.find(query, StoryItem.class);
     }
 
