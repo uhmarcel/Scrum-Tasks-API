@@ -1,11 +1,9 @@
 package com.uhmarcel.storytasks.controllers;
 import com.uhmarcel.storytasks.models.StoryItem;
-import com.uhmarcel.storytasks.models.common.Identifier;
 import com.uhmarcel.storytasks.models.common.Priority;
 import com.uhmarcel.storytasks.models.common.Status;
 import com.uhmarcel.storytasks.services.AutoIncrementService;
 import com.uhmarcel.storytasks.services.StoryService;
-import com.uhmarcel.storytasks.services.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
@@ -13,7 +11,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 import static com.uhmarcel.storytasks.configuration.ControllerConstants.*;
 
@@ -21,7 +18,7 @@ import static com.uhmarcel.storytasks.configuration.ControllerConstants.*;
 @RequestMapping(APP_ROUTE_PREFIX)
 public class StoryItemController {
 
-    private Logger log;
+    private Logger logger;
     private StoryService storyService;
     private AutoIncrementService autoIncrementService;
 
@@ -29,7 +26,7 @@ public class StoryItemController {
     public StoryItemController(StoryService storyService, AutoIncrementService autoIncrementService) {
         this.storyService = storyService;
         this.autoIncrementService = autoIncrementService;
-        this.log = LoggerFactory.getLogger(StoryItemController.class);
+        this.logger = LoggerFactory.getLogger(StoryItemController.class);
     }
 
     @GetMapping("/stories")
@@ -42,14 +39,14 @@ public class StoryItemController {
         @RequestParam(name = "search", required = false) String search,
         @RequestParam(name = "includeParent", defaultValue = "false") Boolean includeParent
     ) {
-        log.info(String.format("GetStoryItems: { parent: %s, status: %s, priority: %s, search: %s, includeParent: %s }",
+        logger.info(String.format("GetStoryItems: { parent: %s, status: %s, priority: %s, search: %s, includeParent: %s }",
                 parent, status, priority, search, includeParent));
         return storyService.getAll(page, ids, parent, status, priority, search, includeParent);
     }
 
     @PostMapping("/stories")
     public List<StoryItem> create(@RequestBody final StoryItem story) {
-        log.info(String.format("CreateStoryItem: %s", story));
+        logger.info(String.format("CreateStoryItem: %s", story));
         return storyService.create(story);
     }
 
@@ -66,7 +63,7 @@ public class StoryItemController {
 
     @PutMapping("/stories/{id}")
     public List<StoryItem> update(@PathVariable("id") Long id, @RequestBody StoryItem story) {
-        log.info(String.format("UpdateStoryItem: { id: %s, story: %s }", id, story));
+        logger.info(String.format("UpdateStoryItem: { id: %s, story: %s }", id, story));
         return storyService.update(id, story);
     }
 

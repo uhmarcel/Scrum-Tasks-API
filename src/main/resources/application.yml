@@ -35,6 +35,15 @@ spring:
       uri: ${vars.mongodb.url}
       auto-index-creation: true
 
+management:
+  endpoints:
+    enabled-by-default: false
+    web.base-path: "/"
+  endpoint:
+    health.enabled: true
+
+
+
 logging:
   level:
     root: INFO
