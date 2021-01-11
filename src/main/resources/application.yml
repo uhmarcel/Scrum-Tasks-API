@@ -20,7 +20,6 @@ vars:
 server:
   port: ${vars.server.port}
 
-
 okta:
   oauth2:
     issuer: ${vars.security.okta-oauth2-issuer}
@@ -41,8 +40,6 @@ management:
     web.base-path: "/"
   endpoint:
     health.enabled: true
-
-
 
 logging:
   level:
