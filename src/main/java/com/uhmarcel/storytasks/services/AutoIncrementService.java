@@ -32,6 +32,4 @@ public class AutoIncrementService {
         return namespace + ":" + id;
     }
 
-
-
 }
