@@ -6,6 +6,8 @@ target/
 
 ### Local configuration ###
 .env
+.hidden
+scripts
 
 ### STS ###
 .apt_generated

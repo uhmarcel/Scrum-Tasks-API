@@ -10,8 +10,8 @@
 	</parent>
 	<groupId>com.uhmarcel</groupId>
 	<artifactId>story-tasks-api</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>scrum-task-manager</name>
+	<version>0.17.0</version>
+	<name>story-tasks-api</name>
 	<description>Backend service for the story tasks manager application</description>
 	<properties>
 		<java.version>1.8</java.version>
